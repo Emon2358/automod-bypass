@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>automod貫通webtool</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label, .actions {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .actions button {
+      width: auto;
+      display: inline-block;
+      margin-right: 0.5rem;
+      margin-top: 0;
+    }
+    button.primary {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+    }
+    button.primary:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>automod貫通webtool</h1>
+  <label for="text">元の文字列:</label>
+  <input type="text" id="text" placeholder="例: おぜう" required>
+
+  <div class="actions">
+    <button id="btn-custom" class="primary">カスタム挿入</button>
+    <button id="btn-zwsp" class="primary">ゼロ幅スペース挿入</button>
+  </div>
+
+  <div id="result" hidden></div>
+
+  <script>
+    /**
+     * \uXXXX 形式の文字を実際の文字に変換する
+     */
+    function parseUnicodeEscape(s) {
+      return s.replace(/\\u[0-9a-fA-F]{4}/g, m => String.fromCharCode(parseInt(m.slice(2), 16)));
+    }
+
+    /**
+     * 各文字間に挿入文字を入れて返す
+     */
+    function insertBetween(text, insert) {
+      return text.split('').join(insert);
+    }
+
+    const inputText = document.getElementById('text');
+    const resultDiv = document.getElementById('result');
+    const btnCustom = document.getElementById('btn-custom');
+    const btnZwsp = document.getElementById('btn-zwsp');
+
+    // カスタム挿入ボタン（プロンプトで入力）
+    btnCustom.addEventListener('click', () => {
+      const raw = prompt('挿入したい文字（直接入力、またはUnicodeエスケープ形式 \uXXXX）を入力:');
+      if (raw === null) return;
+      const insertChar = parseUnicodeEscape(raw);
+      const result = insertBetween(inputText.value, insertChar);
+      resultDiv.textContent = result;
+      resultDiv.hidden = false;
+    });
+
+    // ゼロ幅スペース挿入ボタン
+    btnZwsp.addEventListener('click', () => {
+      const zwsp = '\u200B';
+      const insertChar = parseUnicodeEscape(zwsp);
+      const result = insertBetween(inputText.value, insertChar);
+      resultDiv.textContent = result;
+      resultDiv.hidden = false;
+    });
+  </script>
+</body>
+</html>
