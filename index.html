@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>automodbypasser</title>
+  <title>automod bypasser</title>
   <style>
     body {
       font-family: sans-serif;
@@ -18,7 +18,7 @@
       display: block;
       margin-top: 1rem;
     }
-    input, textarea, button {
+    input, button {
       width: 100%;
       padding: 0.5rem;
       margin-top: 0.5rem;
@@ -55,7 +55,7 @@
   </style>
 </head>
 <body>
-  <h1>automodbypasser</h1>
+  <h1>automod bypasser</h1>
   <label for="text">元の文字列:</label>
   <input type="text" id="text" placeholder="例: ghosthax" required>
 
@@ -88,7 +88,7 @@
 
     // カスタム挿入ボタン（プロンプトで入力）
     btnCustom.addEventListener('click', () => {
-      const raw = prompt('挿入したい文字（直接入力、またはUnicodeエスケープ形式 \uXXXX）を入力:');
+      const raw = prompt('挿入したい文字（直接入力、またはUnicodeエスケープ形式 \\uXXXX）を入力:');
       if (raw === null) return;
       const insertChar = parseUnicodeEscape(raw);
       const result = insertBetween(inputText.value, insertChar);
